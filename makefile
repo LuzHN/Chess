@@ -29,4 +29,4 @@ pawn.o:	pawn.cpp pawn.hpp piece.hpp position.hpp
 	g++ -c pawn.cpp
 
 clean:
-	rm *.o Chess
+	rm -f *.o Chess

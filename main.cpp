@@ -9,9 +9,16 @@
 #include "rook.hpp"
 #include "pawn.hpp"
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <string>
+#include <sstream>
+
 using namespace std;
 
 Piece*** crearTablero(int rows, int cols);
+void Guardar(Piece*** tablero);
 void destruirTablero(Piece*** tablero, int rows, int cols);
 void imprimir(Piece*** tablero);
 void chessInit(Piece*** tablero);
@@ -34,6 +41,7 @@ int main(int argc, char const *argv[]){
 	while(!gano){
 		bool valid = false;//variable de validacion
 		imprimir(tablero);
+		Guardar(tablero);
 		turno++;
 		int x=0,y=0,x1=0,y1=0;
 		if (turno % 2 == 1) {
@@ -42,32 +50,47 @@ int main(int argc, char const *argv[]){
 				cout<<"Ingrese columna de la pieza que desea mover: ";
 				cin>>x;
 				x--;
+
+				
 				cout<<"Ingrese fila de la pieza que desea mover: ";
 				cin >> coordenada1;
 				y = charToInt(coordenada1);
 				cout<<"Ingrese columna a la desea mover la pieza: ";
-				cin>>x1;
+				cin>>x1;					
 				x1--;
 				cout<<"Ingrese fila a la desea mover la pieza: : ";
 				cin >> coordenada2;
 				y1 = charToInt(coordenada2);
-				Position pos(x1,y1);
-				if (tablero[y][x]->getColor()=='B' && tablero[y][x] != NULL){//validacion de mover
-					if(tablero[y][x]->moveTo(tablero,pos))
-						valid = true;//variable de validacion
-					else
-						valid = false;
-				}else{
-					cerr << "No se puede mover las piezas del juagdor opuesto" << endl;
+
+				if(x > 8 || x < 0 || x1 == -1 || y1 == -1){ //verificar todos los valores en un if de un solo
+					/*
+						x no puede pasarse de 8 y menor que cero, x1 no puede ser -1 ya que no se puede pasar de A y de H
+						igual que y1
+					*/
+					cout << endl << endl << "Valor(es) que ingreso estan incorrectos!" << endl;
+					valid = false;
+				} else{
+					Position pos(x1,y1);
+					if (tablero[y][x]->getColor()=='B' && tablero[y][x] != NULL){//validacion de mover
+						if(tablero[y][x]->moveTo(tablero,pos)){
+							valid = true;//variable de validacion
+						
+						}else{
+							valid = false;
+						}
+					}else{
+						cerr << "No se puede mover las piezas del juagdor opuesto" << endl;
+					}
 				}
 			}
-
+			Guardar(tablero);
 		}else{
 			while(!valid){//ciclo de validacion
 				cout<<"Turno de: "<<nombre2<<endl;
 				cout<<"Ingrese columna de la pieza que desea mover: ";
 				cin>>x;
 				x--;
+
 				cout<<"Ingrese fila de la pieza que desea mover: ";
 				cin >> coordenada1;
 				y = charToInt(coordenada1);
@@ -78,17 +101,26 @@ int main(int argc, char const *argv[]){
 				cin >> coordenada2;
 				y1 = charToInt(coordenada2);
 
-				Position pos(x1,y1);
-				if (tablero[y][x]->getColor()=='N' && tablero[y][x] != NULL){//validacion de mover
-					if(tablero[y][x]->moveTo(tablero,pos))
-						valid = true;//variable de validacion
-					else
-						valid = false;
-				}else{
-					cerr << "No se puede mover las piezas del jugador opuesto" << endl;
+				if(x > 8 || x < 0 || x1 == -1 || y1 == -1){ //verificar todos los valores en un if de un solo
+					cout << endl << endl << "Valor(es) que ingreso estan incorrectos!" << endl;
+					valid = false;
+				} else{
+					Position pos(x1,y1);
+					if (tablero[y][x]->getColor()=='N' && tablero[y][x] != NULL){//validacion de mover
+						if(tablero[y][x]->moveTo(tablero,pos)){
+							valid = true;//variable de validacion
+							
+						}
+						else{
+							valid = false;
+						}
+					}else{
+						cerr << "No se puede mover las piezas del jugador opuesto" << endl;
+					}
 				}
 			}
 		}
+		Guardar(tablero);
 		gano = ganar(tablero);
 	}
 
@@ -131,6 +163,32 @@ void imprimir(Piece*** tablero){//imprimir tablero
 	}
 	cout << endl;
 }
+
+void Guardar(Piece*** tablero){//imprimir tablero
+	ofstream file;
+
+	file.open("TableroChess.txt");
+
+	char letras[] = "ABCDEFGH";
+	int numeros[] = {1,2,3,4,5,6,7,8};
+	for (int i = 0; i < 8; ++i){
+		for (int j = 0; j < 8; ++j)	{
+			if(tablero[i][j] != NULL)
+				file << "[" << tablero[i][j]->toString() << "]";
+			else
+				file << "[ ]";
+		}
+		file << letras[i] << endl;
+	}
+	for (int i = 0; i < 8; ++i)	{
+		file << " " << numeros[i] << " ";
+	}
+	file << endl;
+
+	file.close();
+
+}
+
 void chessInit(Piece*** tablero){//Inicializar tablero
 	//piezas blancas
 	//torres
