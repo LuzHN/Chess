@@ -41,7 +41,7 @@ int main(int argc, char const *argv[]){
 	while(!gano){
 		bool valid = false;//variable de validacion
 		imprimir(tablero);
-		Guardar(tablero);
+		Guardar(tablero); //se llama el metodo de guardar cada vez que pasa un turno
 		turno++;
 		int x=0,y=0,x1=0,y1=0;
 		if (turno % 2 == 1) {
@@ -164,7 +164,7 @@ void imprimir(Piece*** tablero){//imprimir tablero
 	cout << endl;
 }
 
-void Guardar(Piece*** tablero){//imprimir tablero
+void Guardar(Piece*** tablero){ //metodo que guarda el tablero en un .txt
 	ofstream file;
 
 	file.open("TableroChess.txt");

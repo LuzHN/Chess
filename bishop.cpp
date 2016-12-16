@@ -21,7 +21,7 @@ bool Bishop::isValidMove(Piece***board, Position destiny){
 	}
 
 
-	if (fabs(this->position.getY()-destiny.getY())==fabs(this->position.getX()-destiny.getX())){
+	if (fabs(this->position.getY()-destiny.getY())==fabs(this->position.getX()-destiny.getX())){ //diagonal de izquierda a derecha
 		
 
 
